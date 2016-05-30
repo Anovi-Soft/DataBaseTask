@@ -1,0 +1,163 @@
+﻿@using System.Activities.Statements
+@model IEnumerable<DataBaseTask.Data.Exam>
+@{
+    ViewBag.Title = "Задание №1";
+}
+
+<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp width-max">
+    <thead>
+    <tr>
+        <th class="mdl-data-table__cell--non-numeric">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
+                <label class="mdl-button mdl-js-button mdl-button--icon" for="search-input">
+                    <i class="material-icons">search</i>
+                </label>
+                <div class="mdl-textfield__expandable-holder width-max">
+                    <input class="mdl-textfield__input width-max" oninput="set_and_update_visiable(this)" type="text" id="search-input">
+                </div>
+            </div>
+        </th>
+        <th class="mdl-data-table__cell--non-numeric"></th>
+    </tr>
+    </thead>
+        <tbody id="base-tbody">
+            @foreach (var exam in Model.OrderBy(x=>x.Name))
+            {
+                <tr id="tr-@exam.Id">
+                    <td class="mdl-data-table__cell--non-numeric">
+                        <div class="mdl-textfield mdl-js-textfield width-max">
+                            <input class="mdl-textfield__input width-max" onchange="block_changed(this)" onfocus="block_focus(this)" type="text" value="@exam.Name" id="@exam.Id">
+                        </div>
+                    </td>
+                    <td>
+                        <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored" onclick="block_delete(this)" id="btn-@exam.Id">
+                            <i class="material-icons">clear</i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+</table>
+<dialog class="mdl-dialog">
+    <h4 class="mdl-dialog__title">Запрешены пустые имена</h4>
+    <div class="mdl-dialog__content">
+        <p>
+            Пустое поле получило свое старое значение.
+        </p>
+    </div>
+    <div class="mdl-dialog__actions">
+        <button type="button" class="mdl-button close">Ok</button>
+    </div>
+</dialog>
+<script>
+    var dialog = document.querySelector('dialog');
+    if (!dialog.showModal) {
+        dialogPolyfill.registerDialog(dialog);
+    }
+    dialog.querySelector('.close').addEventListener('click', function () {
+        dialog.close();
+    });
+
+    var editingBlocksId = [];
+    var removeBlocksId = [];
+    
+    var searchText = "";
+    var count_of_new_fields = 0;
+    var previous_value = "";
+    var init_out_checker = false;
+
+    function tern_on_out_checker() {
+        if (init_out_checker) return;
+        init_out_checker = true;
+        $(window).bind('beforeunload', out_checker);
+    }
+    function tern_off_out_checker() {
+        if (!init_out_checker) return;
+        init_out_checker = false;
+        $(window).unbind('beforeunload', out_checker);
+    }
+    function out_checker() {
+        if (editingBlocksId.count < 1 && removeBlocksId.count < 1) return null;
+        return 'Все не сохраненые данные будут удалены';
+    }
+    function block_changed(sender) {
+        if (!(sender.id === ("new-block" + count_of_new_fields)) && (!sender.value || 0 === sender.value.length)) {
+            sender.value = previous_value;
+            dialog.showModal();
+        }
+        if (editingBlocksId.indexOf(sender.id) > -1) return;
+        if (sender.id.startsWith('new-block')) {
+            if (!sender.value || 0 === sender.value.length) return;
+            add_new_block();
+        }
+        editingBlocksId.push(sender.id);
+        tern_on_out_checker();
+    }
+
+    function block_delete(sender) {
+        var name = sender.id.substring(4);
+        if (name === "new-block" + count_of_new_fields) return;
+        var index = editingBlocksId.indexOf(name);
+        if (index > -1) {
+            editingBlocksId.remove(index);
+        }
+        removeBlocksId.push("tr-" + name);
+        tern_on_out_checker();
+        update_visiable();
+    }
+
+    function set_and_update_visiable(sender) {
+        searchText = sender.value.toLowerCase();
+        update_visiable();
+    }
+    function update_visiable() {
+        $("#base-tbody > tr").each(function (index) {
+            var id = $(this).attr("id");
+            var name = document.getElementById(id.substring(3)).value.toLowerCase();
+            if (name.startsWith(searchText) && (removeBlocksId.indexOf(id) < 0)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    }
+
+    function block_focus(sender) {
+        previous_value = sender.value;
+    }
+    function add_new_block() {
+        count_of_new_fields++;
+        $('#base-tbody').append(
+            '<tr id = "tr-new-block' + count_of_new_fields + '">' +
+            '<td class="mdl-data-table__cell--non-numeric width-max">' +
+            '<div class="mdl-textfield mdl-js-textfield width-max">' +
+            '<input class="mdl-textfield__input width-max" onchange="block_changed(this)" onfocus="block_focus(this)" type="text" id="new-block' + count_of_new_fields + '">' +
+            '</div>' +
+            '</td>' +
+            '<td>' +
+            '<button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored" onclick="block_delete(this)" id="btn-new-block' + count_of_new_fields + '">' +
+            '<i class="material-icons">clear</i>' +
+            '</button>' +
+            '</td>' +
+            '</tr>');
+    }
+
+    function send_data() {
+        tern_off_out_checker();
+        var arg = "";
+        editingBlocksId.forEach(function (item, i, arr) {
+            arg += "entity=" + item + ":" + document.getElementById(item).value + "&";
+        });
+        removeBlocksId.forEach(function(item, i, arr) {
+            arg += "remove=" + item.substring(3) + "&";
+        });
+        location.href = "/Home/FirstTaskDataInsert?" + arg.substring(0, arg.length - 1);
+    }
+    add_new_block();
+</script>
+<button id="show-dialog" type="button" onclick="send_data()" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-button--floating-action">
+    <i class="material-icons">publish</i>
+</button>
+<div class="mdl-tooltip mdl-tooltip--large mdl-tooltip--left" for="show-dialog">
+    Сохранить изменения
+</div>

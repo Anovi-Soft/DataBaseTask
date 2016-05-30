@@ -1,0 +1,65 @@
+﻿@model IEnumerable<DataBaseTask.Data.Enrollee>
+@{
+    ViewBag.Title = "Задание №2";
+}
+
+<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp width-max">
+    <thead>
+    <tr>
+        <th class="mdl-data-table__cell--non-numeric">
+            <h3>№</h3>
+        </th>
+        <th class="mdl-data-table__cell--non-numeric">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
+                <label class="mdl-button mdl-js-button mdl-button--icon" for="search-input">
+                    <i class="material-icons">search</i>
+                </label>
+                <div class="mdl-textfield__expandable-holder width-max">
+                    <input class="mdl-textfield__input width-max" oninput="search_by_name(this)" type="text" id="search-input">
+                </div>
+            </div>
+        </th>
+    </tr>
+    </thead>
+    <tbody id="base-tbody">
+    @foreach (var man in Model.OrderBy(x => x.RegNumber))
+    {
+        <tr onclick="location.href = '/Home/EnrolleeInfo?id=@man.Id'" id='tr_@man.Id'>
+            <td class="mdl-data-table__cell--non-numeric">
+                <div class="mdl-textfield mdl-js-textfield width-max">
+                    <h4>@man.RegNumber</h4>
+                </div>
+            </td>
+            <td class="mdl-data-table__cell--non-numeric">
+                <div class="mdl-textfield mdl-js-textfield width-max">
+                    <h4 id="text_@man.Id">@man.Surname @man.Name @man.Patronymic</h4>
+                </div>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<script>
+    function search_by_name(sender) {
+        var searchText = sender.value.toLowerCase();
+        $("#base-tbody > tr").each(function (index) {
+            var id = $(this).attr("id");
+            var elem = document.getElementById('text_' + id.substring(3));
+            var name = elem
+                .innerHTML
+                .toLowerCase();
+            if (name.startsWith(searchText)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    }
+</script>
+
+<style>
+    tr {
+        cursor: pointer;
+    }
+</style>

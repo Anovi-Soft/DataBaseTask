@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Tuple<string, string>>
+
+@if (!Model.Any())
+{
+    <p>
+        <h3>@ViewBag.Title : Вы ничего не вставили</h3>
+    </p>
+}
+else
+{
+    <h3>@ViewBag.Title</h3>
+    <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp width-max">
+        <form action="#">
+            <thead>
+                <tr>
+                    <th class="mdl-data-table__cell--non-numeric">Значение</th>
+                    <th class="mdl-data-table__cell--non-numeric">Резултьтат</th>
+                </tr>
+            </thead>
+            <tbody id="base-tbody">
+
+                @foreach (var result in Model.OrderBy(x=>x.Item1))
+                {
+                    <tr>
+                        <td class="mdl-data-table__cell--non-numeric">
+                            <h4>@result.Item1</h4>
+                        </td>
+                        <td class="mdl-data-table__cell--non-numeric">
+                            <h4>@result.Item2</h4>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </form>
+    </table>
+}

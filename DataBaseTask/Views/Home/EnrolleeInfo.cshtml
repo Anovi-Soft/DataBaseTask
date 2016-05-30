@@ -1,0 +1,197 @@
+﻿@using DataBaseTask.Data
+@model DataBaseTask.Controllers.EnrolleInfoModel
+
+@{
+    ViewBag.Title = "title";
+    var Man = Model.Enrollee;
+    var Residences = Model.Residences;
+    var Exams = Model.Exams;
+}
+
+
+<form action="EnrolleeInfoEdit" id="data">
+    <div style="visibility: collapse">
+        <input value="@Man.Id" name="id" type="text">
+    </div>
+    <div class="mdl-card card mdl-shadow--2dp">
+        <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">Фамилия</h2>
+        </div>
+        <div class="mdl-card__supporting-text">
+            <input class="mdl-textfield__input width-max" value="@Man.Surname" name="surname" type="text">
+        </div>
+    </div>
+    <div class="mdl-card card mdl-shadow--2dp">
+        <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">Имя</h2>
+        </div>
+        <div class="mdl-card__supporting-text">
+            <input class="mdl-textfield__input width-max" value="@Man.Name" name="name" type="text">
+        </div>
+    </div>
+    <div class="mdl-card card mdl-shadow--2dp">
+        <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">Отчество</h2>
+        </div>
+        <div class="mdl-card__supporting-text">
+            <input class="mdl-textfield__input width-max" value="@Man.Patronymic" name="patronymic" type="text">
+        </div>
+    </div>
+    <div class="mdl-card card mdl-shadow--2dp">
+        <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">Дата заполнения</h2>
+        </div>
+        <div class="mdl-card__supporting-text">
+            <input class="mdl-textfield__input width-max" value='@($"{Man.DateOfCompletion:yyyy-MM-dd}")' name="dateOfCompletion" type="date">
+        </div>
+    </div>
+    <div class="mdl-card card mdl-shadow--2dp">
+        <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">Пол</h2>
+        </div>
+        <div class="mdl-card__supporting-text">
+            <select name="gender">
+                @if (Man.Gender == Gender.Boy)
+            {
+                    <option selected value="1">Мужчина</option>
+                    <option value="2">Женщина</option>
+                }
+                else
+                {
+                    <option value="1">Мужчина</option>
+                    <option selected value="2">Женщина</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="mdl-card card mdl-shadow--2dp">
+        <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">Дата рождения</h2>
+        </div>
+        <div class="mdl-card__supporting-text">
+            <input class="mdl-textfield__input width-max" value='@($"{Man.Birthday:yyyy-MM-dd}")' name="birthday" type="date">
+        </div>
+    </div>
+    <div class="mdl-card card mdl-shadow--2dp">
+        <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">Возраст</h2>
+        </div>
+        <div class="mdl-card__supporting-text">
+            <h4>@(DateTime.Now.Year - Man.Birthday.Year)</h4>
+        </div>
+    </div>
+    <div class="mdl-card card mdl-shadow--2dp">
+        <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">Год окончания уч. учреждения  </h2>
+        </div>
+        <div class="mdl-card__supporting-text">
+            <input class="mdl-textfield__input width-max" value="@Man.YearOfEnd" name="yearOfEnd" type="number">
+        </div>
+    </div>
+    <div class="mdl-card card mdl-shadow--2dp">
+        <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">Аттестат или диплом</h2>
+        </div>
+        <div class="mdl-card__supporting-text">
+            <select name="typeOfCompletion">
+                @if (Man.TypeOfCompletion == TypeOfCompletion.Atcertification)
+            {
+                    <option selected value="1">Аттестат</option>
+                    <option value="2">Диплом</option>
+                }
+                else
+                {
+                    <option value="1">Аттестат</option>
+                    <option selected value="2">Диплом</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="mdl-card card mdl-shadow--2dp">
+        <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">Серия и номер документа об образование</h2>
+        </div>
+        <div class="mdl-card__supporting-text">
+            <input class="mdl-textfield__input width-max" name="seriesOfDocumentCompletionEducation" value="@Man.SeriesOfDocumentCompletionEducation" type="text">
+            <input class="mdl-textfield__input width-max" name="numberOfDocumentCompletionEducation"value="@Man.NumberOfDocumentCompletionEducation" type="text">
+        </div>
+    </div>
+    <div class="mdl-card card mdl-shadow--2dp">
+        <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">Cерия, номер и дата выдачи документа, удостоверяющего личность</h2>
+        </div>
+        <div class="mdl-card__supporting-text">
+            <input class="mdl-textfield__input width-max" name="seriesOfDocument" value="@Man.SeriesOfDocument" type="text">
+            <input class="mdl-textfield__input width-max" name="numberOfDocument" value="@Man.NumberOfDocument" type="text">
+            <input class="mdl-textfield__input width-max" name="dateOfIssueOfTheDocument" value='@($"{Man.DateOfIssueOfTheDocument:yyyy-MM-dd}")' type="date">
+        </div>
+    </div>
+    <div class="mdl-card card mdl-shadow--2dp">
+        <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">Регион</h2>
+        </div>
+        <div class="mdl-card__supporting-text">
+            <select name="residence">
+                @foreach (var residence in Residences)
+            {
+                if (Man.Residence.Id == residence.Id)
+                {
+                        <option selected value="@residence.Id">@residence.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@residence.Id">@residence.Name</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+    <div class="mdl-card card mdl-shadow--2dp">
+        <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">Адрес</h2>
+        </div>
+        <div class="mdl-card__supporting-text">
+            <input name ="address" class="mdl-textfield__input width-max" value="@Man.Address" type="text">
+        </div>
+    </div>
+    @{
+        var i = 1;
+    }
+    @foreach (var examResult in Man.ExamResults)
+    {
+        <div class="mdl-card card mdl-shadow--2dp">
+            <div class="mdl-card__title">
+                <h2 class="mdl-card__title-text">Экзамен @(i++)</h2>
+            </div>
+            <div class="mdl-card__supporting-text">
+                <select style="width: 100%" name="exam">
+                    @foreach (var exam in Exams)
+                {
+                    if (examResult.Exam.Id == exam.Id)
+                    {
+                            <option selected value="@exam.Id">@exam.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@exam.Id">@exam.Name</option>
+                        }
+                    }
+                </select>
+                <input name="examR"class="mdl-textfield__input width-max" value="@examResult.Result" type="number">
+            </div>
+        </div>
+    }
+
+
+
+</form>
+
+<button id="show-dialog" type="submit" form="data" style="position: fixed;" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-button--floating-action">
+    <i class="material-icons">publish</i>
+</button>
+<style>
+    .mdl-card.card {
+        margin: 10px;
+        min-width: 90%;
+    }
+</style>

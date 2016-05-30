@@ -1,0 +1,22 @@
+﻿
+@{
+    string baseUrl = Request.Url.GetLeftPart(UriPartial.Authority);
+    var menuItems = new Dictionary<string, string>
+    {
+        {"Задание №1", baseUrl+"/Home/FirstTask"},
+        {"Задание №2", baseUrl+"/Home/SecondTask"},
+    };
+}
+
+
+@foreach (var line in menuItems)
+{
+    if (ViewBag.Title!= null && ViewBag.Title.StartsWith(line.Key))
+    {
+        <a class="mdl-navigation__link roboto-slab is-active" href="@line.Value">@line.Key</a>
+    }
+    else
+    {
+        <a class="mdl-navigation__link roboto-slab" href="@line.Value">@line.Key</a>
+    }
+}

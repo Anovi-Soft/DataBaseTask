@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="DataBaseTask.Data.FirstTaskContext-Web.config Connection String" description="DataBaseTask.Data.FirstTaskContext Connection String used in web.config by the application to access the database." defaultValue="DataBaseTask.Data.FirstTaskContext_ConnectionString" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\anovi\\Documents\\Visual\ Studio\ 2015\\Projects\\DataBaseTask\\DataBaseTask\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DataBaseTask.Data.FirstTaskContext']/@connectionString" />
+  </parameter>
+</parameters>
